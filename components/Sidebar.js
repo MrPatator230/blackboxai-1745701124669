@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { AuthContext } from '../pages/_app';
 import { SettingsContext } from '../contexts/SettingsContext';
 
@@ -9,6 +9,7 @@ export default function Sidebar() {
   const currentPath = router.pathname;
   const { logout } = useContext(AuthContext);
   const { companyName } = useContext(SettingsContext);
+  const [isSettingsMenuOpen, setSettingsMenuOpen] = useState(false);
 
   const navItems = [
     { href: '/admin', icon: 'fas fa-fw fa-tachometer-alt', label: 'Dashboard' },
@@ -19,11 +20,14 @@ export default function Sidebar() {
     { href: '/admin/info-trafics', icon: 'fas fa-fw fa-info-circle', label: 'Infos Trafic' },
     { href: '/admin/attribution-voie', icon: 'fas fa-fw fa-map-signs', label: 'Attribution Voie' },
     { href: '/admin/type-horaires', icon: 'fas fa-fw fa-clock', label: 'Type Horaires' },
-    { href: '/admin/sauvegarde', icon: 'fas fa-fw fa-save', label: 'Sauvegarde' },
-    { href: '/admin/update', icon: 'fas fa-fw fa-sync-alt', label: 'Mise à jour' },
   ];
 
-  const linkCount = navItems.length;
+  const settingsSubItems = [
+    { href: '/admin/sauvegarde', label: 'Sauvegarde' },
+    { href: '/admin/update', label: 'Mise à jour' },
+  ];
+
+  const linkCount = navItems.length + (isSettingsMenuOpen ? settingsSubItems.length : 0);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -53,6 +57,38 @@ export default function Sidebar() {
           </Link>
         </li>
       ))}
+
+      {/* Paramètres Système folder */}
+      <li className="nav-item">
+        <a
+          href="#!"
+          className="nav-link d-flex justify-content-between align-items-center"
+          onClick={(e) => {
+            e.preventDefault();
+            setSettingsMenuOpen(!isSettingsMenuOpen);
+          }}
+          aria-expanded={isSettingsMenuOpen}
+          aria-controls="settingsSubMenu"
+        >
+          <span>
+            <i className="fas fa-cogs fa-fw"></i>
+            <span className="ml-2">Paramètres Système</span>
+          </span>
+          <i className={`fas fa-chevron-${isSettingsMenuOpen ? 'down' : 'right'}`}></i>
+        </a>
+        {isSettingsMenuOpen && (
+          <ul className="submenu list-unstyled pl-4" id="settingsSubMenu">
+            {settingsSubItems.map(({ href, label }) => (
+              <li key={href} className={`nav-item ${currentPath === href ? 'active' : ''}`}>
+                <Link href={href} className="nav-link">
+                  <span>{label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+
       <hr className="sidebar-divider mt-auto" />
       <li className="nav-item">
         <a href="#" onClick={handleLogout} className="nav-link">
