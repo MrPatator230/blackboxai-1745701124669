@@ -7,6 +7,8 @@ export default function Admin() {
   const { isAuthenticated } = useContext(AuthContext);
   const router = useRouter();
   const [stationCount, setStationCount] = useState(0);
+  const [regularityRate, setRegularityRate] = useState(95); // Placeholder percentage
+  const [isAppUpToDate, setIsAppUpToDate] = useState(true); // Placeholder status
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -69,8 +71,9 @@ export default function Admin() {
 
             {/* Begin Page Content */}
             <div className="container-fluid">
-              {/* Station Count Widget */}
+              {/* Widgets Row */}
               <div className="row">
+                {/* Station Count Widget */}
                 <div className="col-xl-3 col-md-6 mb-4">
                   <div className="card border-left-primary shadow h-100 py-2">
                     <div className="card-body">
@@ -88,8 +91,48 @@ export default function Admin() {
                     </div>
                   </div>
                 </div>
+
+                {/* Regularity Rate Widget */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className="card border-left-success shadow h-100 py-2">
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Taux de régularité des horaires
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold text-gray-800">{regularityRate}%</div>
+                        </div>
+                        <div className="col-auto">
+                          <i className="fas fa-clock fa-2x text-gray-300"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* App Update Status Widget */}
+                <div className="col-xl-3 col-md-6 mb-4">
+                  <div className={`card border-left-${isAppUpToDate ? 'info' : 'warning'} shadow h-100 py-2`}>
+                    <div className="card-body">
+                      <div className="row no-gutters align-items-center">
+                        <div className="col mr-2">
+                          <div className="text-xs font-weight-bold text-info text-uppercase mb-1">
+                            État de l'application
+                          </div>
+                          <div className="h5 mb-0 font-weight-bold text-gray-800">
+                            {isAppUpToDate ? 'À jour' : 'Mise à jour requise'}
+                          </div>
+                        </div>
+                        <div className="col-auto">
+                          <i className={`fas fa-${isAppUpToDate ? 'check-circle' : 'exclamation-triangle'} fa-2x text-gray-300`}></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              {/* End Station Count Widget */}
+              {/* End Widgets Row */}
 
               <h2>Bienvenue dans l'espace admin</h2>
               <p>Utilisez le menu latéral pour naviguer.</p>
